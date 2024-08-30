@@ -1,3 +1,8 @@
+https://github.com/SebLague/Fluid-Sim/tree/main
+
+https://www.calculatorsoup.com/calculators/physics/
+
+
 # CMake SFML Project Template
 
 This repository template should allow for a fast and hassle-free kick start of your next SFML project using CMake.
