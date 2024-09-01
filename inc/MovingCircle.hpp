@@ -13,13 +13,13 @@ struct ParticleProperties
 struct EnvironmentProperties
 {
     sf::Vector2f gravity{0.f, 10.f};
-    double damping {0.5};
+    double damping{0.5};
 };
 
-
-class MovingCircle : public sf::CircleShape {
+class MovingCircle : public sf::CircleShape
+{
 public:
-    MovingCircle(const sf::Vector2u& windowSize, const EnvironmentProperties &environment, const ParticleProperties &particle);
+    MovingCircle(const sf::Vector2u &windowSize, const EnvironmentProperties &environment, const ParticleProperties &particle);
 
     // Update method to update the circle's position based on a float deltaTime
     void update(float deltaTime);
