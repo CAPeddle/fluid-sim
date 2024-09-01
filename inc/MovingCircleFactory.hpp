@@ -8,13 +8,14 @@
 class MovingCircleFactory
 {
     EnvironmentProperties m_environment = {.gravity = {0.f, 10.f}, .damping = {0.9}};
+    const sf::Vector2u m_windowSize;
 
    public:
-    MovingCircleFactory(const EnvironmentProperties &environment);
+    MovingCircleFactory(const sf::Vector2u &windowSize, const EnvironmentProperties &environment);
 
-    MovingCircle createDefault(const sf::Vector2u &windowSize);
-    MovingCircle createCustom(const sf::Vector2u &windowSize, const ParticleProperties &particle);
-    MovingCircle createRandom(const sf::Vector2u &windowSize);
+    MovingCircle createDefault();
+    MovingCircle createCustom(const ParticleProperties &particle);
+    MovingCircle createRandom();
 };
 
 #endif  // MOVINGCIRCLEFACTORY_HPP

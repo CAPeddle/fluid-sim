@@ -18,18 +18,20 @@ struct EnvironmentProperties
 
 class MovingCircle : public sf::CircleShape
 {
-public:
-    MovingCircle(const sf::Vector2u &windowSize, const EnvironmentProperties &environment, const ParticleProperties &particle);
+   public:
+    MovingCircle(const sf::Vector2u &windowSize,
+                 const EnvironmentProperties &environment,
+                 const ParticleProperties &particle);
 
     // Update method to update the circle's position based on a float deltaTime
     void update(float deltaTime);
 
-private:
-    sf::Vector2u windowSize; // Store the dimensions of the render window
+   private:
+    sf::Vector2u windowSize;  // Store the dimensions of the render window
 
     EnvironmentProperties m_environment;
     ParticleProperties m_particleProperties;
     sf::Vector2f gravity{0.f, 10.f};
 };
 
-#endif // MOVINGCIRCLE_HPP
+#endif  // MOVINGCIRCLE_HPP
