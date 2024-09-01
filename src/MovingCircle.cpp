@@ -8,9 +8,9 @@ MovingCircle::MovingCircle(const sf::Vector2u &windowSize,
       m_environment(environment),
       m_particleProperties(particle)
 {
+    setOrigin(particle.radius, particle.radius);
     setFillColor(sf::Color::Green);
     setPosition(particle.position);
-    setOrigin(getRadius(), getRadius());
 }
 
 void MovingCircle::update(float deltaTime)

@@ -1,17 +1,36 @@
 BasedOnStyle: Google
 IndentWidth: 4
 ColumnLimit: 120
-PackConstructorInitializers: NextLine
-
+PackConstructorInitializers: NextLineOnly
+BreakConstructorInitializers: BeforeColon
+Cpp11BracedListStyle: true
 
 # Controls how initializer lists, including braced initializers, are formatted.
-BreakBeforeBraces: Allman
+#BreakBeforeBraces: Allman
 
 # Ensures that each element in an initializer list is on its own line.
 BreakBeforeBinaryOperators: All
 BinPackArguments: false
 BinPackParameters: false
 AlignAfterOpenBracket: Align
+AllowAllArgumentsOnNextLine: false
+
+# Ensures that each element in a braced initializer list is on its own line.
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterEnum: true
+  AfterStruct: true
+  AfterClass: true
+  BeforeElse: true
+  AfterFunction: true
+  AfterControlStatement: true
+  AfterCaseLabel: true
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
+  BeforeLambdaBody: true
+  AfterUnion: true
+  BeforeCatch: true
 
 # Forces the initializer lists to break after every element.
-ConstructorInitializerAllOnOneLineOrOnePerLine: true
+#ConstructorInitializerAllOnOneLineOrOnePerLine: true

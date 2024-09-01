@@ -3,17 +3,13 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Environment.hpp"
+
 struct ParticleProperties
 {
     sf::Vector2f velocity{0.f, 0.f};
     sf::Vector2f position;
     float radius;
-};
-
-struct EnvironmentProperties
-{
-    sf::Vector2f gravity{0.f, 10.f};
-    double damping{0.5};
 };
 
 class MovingCircle : public sf::CircleShape
@@ -27,7 +23,7 @@ class MovingCircle : public sf::CircleShape
     void update(float deltaTime);
 
    private:
-    sf::Vector2u windowSize;  // Store the dimensions of the render window
+    sf::Vector2u windowSize;
 
     EnvironmentProperties m_environment;
     ParticleProperties m_particleProperties;

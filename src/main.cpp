@@ -37,12 +37,6 @@ int main()
     circles.emplace_back(circle_factory.createRandom());
     circles.emplace_back(circle_factory.createRandom());
 
-    sf::CircleShape drop(20.f);
-    drop.setOrigin(drop.getRadius(), drop.getRadius());
-
-    auto drop_postion = drop.getPosition();
-    std::cout << "x: " << drop_postion.x << "\ny: " << drop_postion.y << "\n";
-
     sf::Clock clock;
     while (window.isOpen())
     {
@@ -68,7 +62,6 @@ int main()
             window.draw(circle);
         }
 
-        window.draw(drop);
         window.draw(text);
 
         /*  -----------  */
