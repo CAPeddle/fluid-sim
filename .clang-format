@@ -1,0 +1,17 @@
+BasedOnStyle: Google
+IndentWidth: 4
+ColumnLimit: 120
+PackConstructorInitializers: NextLine
+
+
+# Controls how initializer lists, including braced initializers, are formatted.
+BreakBeforeBraces: Allman
+
+# Ensures that each element in an initializer list is on its own line.
+BreakBeforeBinaryOperators: All
+BinPackArguments: false
+BinPackParameters: false
+AlignAfterOpenBracket: Align
+
+# Forces the initializer lists to break after every element.
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
