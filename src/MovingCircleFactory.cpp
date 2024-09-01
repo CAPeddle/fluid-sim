@@ -1,7 +1,10 @@
 #include "MovingCircleFactory.hpp"
 
+#include <cmath>
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
+
 MovingCircleFactory::MovingCircleFactory(const sf::Vector2u &windowSize, const EnvironmentProperties &environment)
     : m_windowSize(windowSize), m_environment(environment)
 {
@@ -10,8 +13,9 @@ MovingCircleFactory::MovingCircleFactory(const sf::Vector2u &windowSize, const E
 
 MovingCircle MovingCircleFactory::createDefault()
 {
-    ParticleProperties defaultParticle{
-        sf::Vector2f(0.f, 0.f), sf::Vector2f(m_windowSize.x / 2.f, m_windowSize.y / 2.f), 50.f};
+    ParticleProperties defaultParticle{sf::Vector2f(0.f, 0.f),
+                                       sf::Vector2f(m_windowSize.x / 2.f, m_windowSize.y / 2.f),
+                                       50.f};
     return MovingCircle(m_windowSize, m_environment, defaultParticle);
 }
 
@@ -22,7 +26,7 @@ MovingCircle MovingCircleFactory::createCustom(const ParticleProperties &particl
 
 MovingCircle MovingCircleFactory::createRandom()
 {
-    float radius = static_cast<float>(rand() % 80 + 10);
+    float radius = static_cast<float>(rand() % 60 + 10);
 
     sf::Vector2f position{static_cast<float>(rand() % static_cast<int>(m_windowSize.x - radius) + radius),
                           static_cast<float>(rand() % static_cast<int>(m_windowSize.y - radius) + radius)};
@@ -31,4 +35,27 @@ MovingCircle MovingCircleFactory::createRandom()
 
     ParticleProperties randomParticle{velocity, position, radius};
     return MovingCircle(m_windowSize, m_environment, randomParticle);
+}
+
+std::vector<MovingCircle> MovingCircleFactory::createBox(unsigned int particlesPerRow,
+                                                         unsigned int particlesPerCol,
+                                                         const ParticleProperties properties)
+{
+    std::vector<MovingCircle> circles;
+    circles.reserve(particlesPerCol * particlesPerRow);
+
+    auto spacing = 2 * properties.radius + (properties.radius * 0.2);
+
+    for (size_t i = 0; i < particlesPerCol * particlesPerRow; i++)
+    {
+        ParticleProperties particle_properties(properties);
+        particle_properties.position.x
+            = (i % particlesPerRow - particlesPerRow / 2.f + 0.5) * spacing + (m_windowSize.x / 2);
+        particle_properties.position.y
+            = (i / particlesPerRow - particlesPerCol / 2.f + 0.5) * spacing + (m_windowSize.y / 2);
+
+        circles.emplace_back(createCustom(particle_properties));
+    }
+
+    return circles;
 }

@@ -17,6 +17,10 @@ class MovingCircleFactory
     MovingCircle createDefault();
     MovingCircle createCustom(const ParticleProperties &particle);
     MovingCircle createRandom();
+
+    std::vector<MovingCircle> createBox(unsigned int particlesPerRow,
+                                        unsigned int particlesPerCol,
+                                        const ParticleProperties properties);
 };
 
 #endif  // MOVINGCIRCLEFACTORY_HPP

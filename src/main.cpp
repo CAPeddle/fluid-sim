@@ -14,7 +14,7 @@ int main()
     std::vector<MovingCircle> circles;
     circles.reserve(10);
 
-    sf::RenderWindow window(sf::VideoMode(400, 400), "SFML kinda works!");
+    sf::RenderWindow window(sf::VideoMode(600, 400), "SFML kinda works!");
 
     sf::Font font;
     if (!font.loadFromFile("resources/3230-font.ttf"))
@@ -33,9 +33,13 @@ int main()
     EnvironmentProperties the_environment = {.gravity = {0.f, 10.f}, .damping = {0.9}};
     MovingCircleFactory circle_factory(window.getSize(), the_environment);
 
-    circles.emplace_back(circle_factory.createRandom());
-    circles.emplace_back(circle_factory.createRandom());
-    circles.emplace_back(circle_factory.createRandom());
+    ParticleProperties particle_properties = {.radius = 10.f};
+
+    circles = circle_factory.createBox(3, 3, particle_properties);
+
+    // circles.emplace_back(circle_factory.createRandom());
+    // circles.emplace_back(circle_factory.createRandom());
+    // circles.emplace_back(circle_factory.createRandom());
 
     sf::Clock clock;
     while (window.isOpen())

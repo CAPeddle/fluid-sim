@@ -23,6 +23,8 @@ void MovingCircle::update(float deltaTime)
     if (currentPosition.x + getRadius() > windowSize.x)
     {
         m_particleProperties.velocity.x *= -1 * m_environment.damping;
+
+        currentPosition.x = windowSize.x - m_particleProperties.radius;
     }
     if (currentPosition.x < getRadius())
     {
@@ -32,6 +34,8 @@ void MovingCircle::update(float deltaTime)
     if (currentPosition.y + getRadius() > windowSize.y)
     {
         m_particleProperties.velocity.y *= -1 * m_environment.damping;
+
+        currentPosition.y = windowSize.y - m_particleProperties.radius;
     }
     if (currentPosition.y < getRadius())
     {
