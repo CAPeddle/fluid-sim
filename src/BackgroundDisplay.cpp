@@ -33,7 +33,7 @@ void BackGroundDisplay::calculateDensityAndColorBackground(sf::RenderWindow& win
                                                            const std::vector<MovingCircle>& circles)
 {
     sf::Vector2u windowSize = window.getSize();
-    const int desiredGridSize = 10;  // Size of each grid cell
+    const int desiredGridSize = 5;  // Size of each grid cell
     const int numRows = windowSize.y / desiredGridSize;
     const int numCols = windowSize.x / desiredGridSize;
 

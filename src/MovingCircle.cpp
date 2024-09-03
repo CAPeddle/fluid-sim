@@ -1,6 +1,7 @@
 
 #include "MovingCircle.hpp"
 
+#include <algorithm>
 #include <cmath>
 
 MovingCircle::MovingCircle(const sf::Vector2u &windowSize,
@@ -26,10 +27,9 @@ void MovingCircle::update(float deltaTime)
     if (currentPosition.x + getRadius() > windowSize.x)
     {
         m_particleProperties.velocity.x *= -1 * m_environment.damping;
-
         currentPosition.x = windowSize.x - m_particleProperties.radius;
     }
-    if (currentPosition.x < getRadius())
+    else if (currentPosition.x < getRadius())
     {
         m_particleProperties.velocity.x *= -1 * m_environment.damping;
     }
@@ -37,10 +37,9 @@ void MovingCircle::update(float deltaTime)
     if (currentPosition.y + getRadius() > windowSize.y)
     {
         m_particleProperties.velocity.y *= -1 * m_environment.damping;
-
         currentPosition.y = windowSize.y - m_particleProperties.radius;
     }
-    if (currentPosition.y < getRadius())
+    else if (currentPosition.y < getRadius())
     {
         m_particleProperties.velocity.y *= -1 * m_environment.damping;
     }
@@ -50,8 +49,13 @@ void MovingCircle::update(float deltaTime)
 
 float MovingCircle::influence(const sf::Vector2f &point) const
 {
-    sf::Vector2f center = getPosition() + sf::Vector2f(getRadius(), getRadius());
-    float distance = std::sqrt(std::pow(center.x - point.x, 2) + std::pow(center.y - point.y, 2));
-    float sigma = getRadius() * 2.0f;  // Spread of the influence
+    // sf::Vector2f center = getPosition();
+    // float distance = std::sqrt(std::pow(center.x - point.x, 2) + std::pow(center.y - point.y, 2));
+    // auto impact = std::max(0.f, m_environment.influenceRange - distance);
+    // return std::pow(impact, 3);
+
+    sf::Vector2f center = getPosition();
+    float distance = std::hypot(center.x - point.x, center.y - point.y);
+    float sigma = getRadius() * m_environment.influenceRange;  // Spread of the influence
     return std::exp(-distance * distance / (2 * sigma * sigma));
 }

@@ -8,6 +8,8 @@
 #include <vector>
 
 #include "BackgroundDisplay.hpp"
+#include "EventHandler.hpp"
+#include "Grid.hpp"
 #include "MovingCircle.hpp"
 #include "MovingCircleFactory.hpp"
 
@@ -24,26 +26,26 @@ int main()
         return -1;
     }
 
-    EnvironmentProperties the_environment = {.gravity = {0.f, 10.f}, .damping = {0.9}};
+    EnvironmentProperties the_environment = {.gravity = {0.f, 10.f}, .damping = {0.9}, .influenceRange = 2.};
+
     MovingCircleFactory circle_factory(window.getSize(), the_environment);
 
     ParticleProperties particle_properties = {.radius = 10.f};
 
-    // circles = circle_factory.createBox(3, 3, particle_properties);
+    // circles = circle_factory.createBox(5, 5, particle_properties);
 
     circles = circle_factory.fillRandom(19, particle_properties);
+    Grid grid(window.getSize(), 10);  // Grid size of 100x100 pixels
 
     sf::Clock clock;
+    EventHandler eventHandler;
     while (window.isOpen())
     {
         sf::Event event;
         float dt = clock.restart().asSeconds();
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::Closed)
-            {
-                window.close();
-            }
+            eventHandler.EventPoll(window, event);
         }
         window.clear(sf::Color::Black);
         /*  -----------  */
