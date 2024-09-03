@@ -21,6 +21,7 @@ class MovingCircleFactory
     std::vector<MovingCircle> createBox(unsigned int particlesPerRow,
                                         unsigned int particlesPerCol,
                                         const ParticleProperties properties);
+    std::vector<MovingCircle> fillRandom(unsigned int num_particles, const ParticleProperties properties);
 };
 
 #endif  // MOVINGCIRCLEFACTORY_HPP

@@ -22,6 +22,8 @@ class MovingCircle : public sf::CircleShape
     // Update method to update the circle's position based on a float deltaTime
     void update(float deltaTime);
 
+    float influence(const sf::Vector2f &point) const;
+
    private:
     sf::Vector2u windowSize;
 

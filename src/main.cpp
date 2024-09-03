@@ -2,17 +2,18 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
+#include <cmath>
 #include <iostream>
 #include <string>
 #include <vector>
 
+#include "BackgroundDisplay.hpp"
 #include "MovingCircle.hpp"
 #include "MovingCircleFactory.hpp"
 
 int main()
 {
     std::vector<MovingCircle> circles;
-    circles.reserve(10);
 
     sf::RenderWindow window(sf::VideoMode(600, 400), "SFML kinda works!");
 
@@ -23,23 +24,14 @@ int main()
         return -1;
     }
 
-    sf::Text text;
-    text.setFont(font);
-    text.setString("Hello, SFML!");
-    text.setCharacterSize(12);
-    text.setFillColor(sf::Color::White);
-    text.setPosition(50.f, 50.f);
-
     EnvironmentProperties the_environment = {.gravity = {0.f, 10.f}, .damping = {0.9}};
     MovingCircleFactory circle_factory(window.getSize(), the_environment);
 
     ParticleProperties particle_properties = {.radius = 10.f};
 
-    circles = circle_factory.createBox(3, 3, particle_properties);
+    // circles = circle_factory.createBox(3, 3, particle_properties);
 
-    // circles.emplace_back(circle_factory.createRandom());
-    // circles.emplace_back(circle_factory.createRandom());
-    // circles.emplace_back(circle_factory.createRandom());
+    circles = circle_factory.fillRandom(19, particle_properties);
 
     sf::Clock clock;
     while (window.isOpen())
@@ -56,17 +48,17 @@ int main()
         window.clear(sf::Color::Black);
         /*  -----------  */
 
-        for (auto &circle : circles)
+        for (auto& circle : circles)
         {
             circle.update(dt);
         }
 
-        for (auto &circle : circles)
+        BackGroundDisplay::calculateDensityAndColorBackground(window, circles);
+
+        for (auto& circle : circles)
         {
             window.draw(circle);
         }
-
-        window.draw(text);
 
         /*  -----------  */
         window.display();

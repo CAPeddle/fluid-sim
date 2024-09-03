@@ -19,7 +19,7 @@ FetchContent_MakeAvailable(SFML)
 # Include the header files from the "include" directory
 include_directories(${PROJECT_SOURCE_DIR}/inc)
 
-add_executable(main src/main.cpp src/MovingCircle.cpp  src/MovingCircleFactory.cpp)
+add_executable(main src/main.cpp src/MovingCircle.cpp  src/MovingCircleFactory.cpp src/BackgroundDisplay.cpp)
 target_link_libraries(main PRIVATE sfml-graphics)
 target_compile_features(main PRIVATE cxx_std_17)
 

@@ -1,4 +1,7 @@
+
 #include "MovingCircle.hpp"
+
+#include <cmath>
 
 MovingCircle::MovingCircle(const sf::Vector2u &windowSize,
                            const EnvironmentProperties &environment,
@@ -43,4 +46,12 @@ void MovingCircle::update(float deltaTime)
     }
 
     setPosition(currentPosition);
+}
+
+float MovingCircle::influence(const sf::Vector2f &point) const
+{
+    sf::Vector2f center = getPosition() + sf::Vector2f(getRadius(), getRadius());
+    float distance = std::sqrt(std::pow(center.x - point.x, 2) + std::pow(center.y - point.y, 2));
+    float sigma = getRadius() * 2.0f;  // Spread of the influence
+    return std::exp(-distance * distance / (2 * sigma * sigma));
 }

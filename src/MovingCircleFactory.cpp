@@ -59,3 +59,27 @@ std::vector<MovingCircle> MovingCircleFactory::createBox(unsigned int particlesP
 
     return circles;
 }
+
+std::vector<MovingCircle> MovingCircleFactory::fillRandom(unsigned int num_particles,
+                                                          const ParticleProperties properties)
+{
+    std::vector<MovingCircle> circles;
+    circles.reserve(num_particles);
+
+    auto spacing = 2 * properties.radius + (properties.radius * 0.2);
+
+    for (size_t i = 0; i < num_particles; i++)
+    {
+        ParticleProperties particle_properties(properties);
+
+        sf::Vector2f position{
+            static_cast<float>(rand() % static_cast<int>(m_windowSize.x - properties.radius) + properties.radius),
+            static_cast<float>(rand() % static_cast<int>(m_windowSize.y - properties.radius) + properties.radius)};
+
+        particle_properties.position = position;
+
+        circles.emplace_back(createCustom(particle_properties));
+    }
+
+    return circles;
+}
