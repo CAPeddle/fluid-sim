@@ -52,6 +52,7 @@ void BackGroundDisplay::calculateDensityAndColorBackground(sf::RenderWindow& win
 
     std::vector<std::vector<float>> densityGrid(numRows, std::vector<float>(numCols, 0.0f));
 
+    float maxDensity = 0;
     // Calculate density with influence functions
     for (const auto& circle : circles)
     {
@@ -60,7 +61,9 @@ void BackGroundDisplay::calculateDensityAndColorBackground(sf::RenderWindow& win
             for (int col = 0; col < numCols; ++col)
             {
                 sf::Vector2f cellCenter(col * gridSize + gridSize / 2.0f, row * gridSize + gridSize / 2.0f);
-                densityGrid[row][col] += circle.influence(cellCenter);
+                float temp = circle.influence(cellCenter);
+                densityGrid[row][col] += temp;
+                maxDensity = std::max(maxDensity, densityGrid[row][col]);  // Update maxDensity with the total density
             }
         }
     }
@@ -71,9 +74,14 @@ void BackGroundDisplay::calculateDensityAndColorBackground(sf::RenderWindow& win
         for (int col = 0; col < numCols; ++col)
         {
             float density = densityGrid[row][col];
-            int intensity = std::min(255, static_cast<int>(density * 255));  // Adjust multiplier for desired effect
+
+            // Scale the density to the 0-255 range based on maxDensity
+            int intensity = maxDensity > 0 ? std::min(255, static_cast<int>((density / maxDensity) * 255)) : 0;
+
             sf::RectangleShape cell(sf::Vector2f(gridSize, gridSize));
             cell.setPosition(col * gridSize, row * gridSize);
+
+            // Red color with intensity scaled by density
             cell.setFillColor(sf::Color(intensity, 0, 255 - intensity));  // Blue to Red gradient
             window.draw(cell);
         }

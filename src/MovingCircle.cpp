@@ -49,13 +49,11 @@ void MovingCircle::update(float deltaTime)
 
 float MovingCircle::influence(const sf::Vector2f &point) const
 {
-    // sf::Vector2f center = getPosition();
-    // float distance = std::sqrt(std::pow(center.x - point.x, 2) + std::pow(center.y - point.y, 2));
-    // auto impact = std::max(0.f, m_environment.influenceRange - distance);
-    // return std::pow(impact, 3);
-
     sf::Vector2f center = getPosition();
-    float distance = std::hypot(center.x - point.x, center.y - point.y);
-    float sigma = getRadius() * m_environment.influenceRange;  // Spread of the influence
-    return std::exp(-distance * distance / (2 * sigma * sigma));
+    float distance = std::sqrt(std::pow(center.x - point.x, 2) + std::pow(center.y - point.y, 2));
+    if (distance > m_environment.influenceRange) return 0;
+
+    float impact = std::max(0.f, m_environment.influenceRange - distance) / m_environment.influenceRange;
+    impact = std::pow(impact, 3);
+    return impact;
 }

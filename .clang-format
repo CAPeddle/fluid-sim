@@ -14,6 +14,7 @@ BinPackArguments: false
 BinPackParameters: false
 AlignAfterOpenBracket: Align
 AllowAllArgumentsOnNextLine: false
+AlignArrayOfStructures: Left
 
 # Ensures that each element in a braced initializer list is on its own line.
 BreakBeforeBraces: Custom
@@ -26,7 +27,7 @@ BraceWrapping:
   AfterControlStatement: true
   AfterCaseLabel: true
   SplitEmptyFunction: true
-  SplitEmptyRecord: true
+  SplitEmptyRecord: false
   SplitEmptyNamespace: true
   BeforeLambdaBody: true
   AfterUnion: true

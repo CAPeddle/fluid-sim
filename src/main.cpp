@@ -26,16 +26,24 @@ int main()
         return -1;
     }
 
-    EnvironmentProperties the_environment = {.gravity = {0.f, 10.f}, .damping = {0.9}, .influenceRange = 2.};
+    // clang-format off
+    EnvironmentProperties the_environment = {
+        .gravity = {0.f, 10.f}, 
+        .damping = {0.9}, 
+        .influenceRange = 30.f
+        };
+
+    ParticleProperties particle_properties = {
+        .radius = 5.f
+        };
+    // clang-format on
 
     MovingCircleFactory circle_factory(window.getSize(), the_environment);
 
-    ParticleProperties particle_properties = {.radius = 10.f};
+    circles = circle_factory.createBox(5, 5, particle_properties);
 
-    // circles = circle_factory.createBox(5, 5, particle_properties);
-
-    circles = circle_factory.fillRandom(19, particle_properties);
-    Grid grid(window.getSize(), 10);  // Grid size of 100x100 pixels
+    // circles = circle_factory.fillRandom(19, particle_properties);
+    Grid grid(window.getSize(), 10);
 
     sf::Clock clock;
     EventHandler eventHandler;
