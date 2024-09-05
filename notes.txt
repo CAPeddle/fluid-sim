@@ -1,0 +1,2 @@
+density : high density equals a pressure away from that position. So we need a density value at the position of the particle. But what is the direction that is "away" ? 
+does it matter, if all the forces are applied then the particle will settle in a space
