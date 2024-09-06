@@ -14,10 +14,7 @@ MovingCircleFactory::MovingCircleFactory(const sf::Vector2u &windowSize,
 
 MovingCircle MovingCircleFactory::createDefault()
 {
-    ParticleProperties defaultParticle{sf::Vector2f(0.f, 0.f),
-                                       sf::Vector2f(m_windowSize.x / 2.f, m_windowSize.y / 2.f),
-                                       50.f};
-    return MovingCircle(m_windowSize, m_environment, defaultParticle);
+    return MovingCircle(m_windowSize, m_environment, m_defaultParticle);
 }
 
 MovingCircle MovingCircleFactory::createCustom(const ParticleProperties &particle)
