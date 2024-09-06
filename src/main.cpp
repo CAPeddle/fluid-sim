@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "BackgroundDisplay.hpp"
+#include "ConfigReader.hpp"
 #include "EventHandler.hpp"
 #include "Grid.hpp"
 #include "MovingCircle.hpp"
@@ -15,28 +16,21 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(600, 400), "SFML kinda works!");
+    ConfigReader configReader("resources/config.toml");
 
-    sf::Font font;
-    if (!font.loadFromFile("resources/3230-font.ttf"))
-    {
-        std::cerr << "Error: Could not load font file!" << std::endl;
-        return -1;
-    }
+    auto resolution = configReader.getResolution();
+    // todo: add error handling for sfml window
+    sf::RenderWindow window(sf::VideoMode(resolution.first, resolution.second), "C++ Fluid Simulation");
+
+    EnvironmentProperties the_environment(std::make_shared<ConfigReader>(configReader));
 
     // clang-format off
-    EnvironmentProperties the_environment = {
-        .gravity = {0.f, 10.f}, 
-        .damping = {0.9}, 
-        .influenceRange = 30.f
-        };
-
     ParticleProperties particle_properties = {
         .radius = 5.f
         };
     // clang-format on
 
-    MovingCircleFactory circle_factory(window.getSize(), the_environment);
+    MovingCircleFactory circle_factory(window.getSize(), std::make_shared<EnvironmentProperties>(the_environment));
 
     std::vector<MovingCircle> circles;
     circles = circle_factory.createBox(5, 5, particle_properties);

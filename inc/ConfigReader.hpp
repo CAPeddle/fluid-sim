@@ -1,9 +1,8 @@
 #ifndef CONFIG_READER_H
 #define CONFIG_READER_H
 
-#include <yaml-cpp/yaml.h>
-
 #include <string>
+#include <toml.hpp>
 
 class ConfigReader
 {
@@ -11,15 +10,17 @@ class ConfigReader
     // Constructor that takes the path to the YAML file
     ConfigReader(const std::string& filePath);
 
-    // Method to read the configuration file
-    void readConfig();
+    std::pair<float, float> getGravity() const;
 
-    template <typename T>
-    T getValue(const std::string& key) const;
+    float getInfluenceRange() const;
+
+    std::string getFontPath() const;
+
+    std::pair<unsigned int, unsigned int> getResolution() const;
 
    private:
-    std::string filePath;
-    YAML::Node config;
+    std::string m_filePath;
+    toml::value m_root;
 };
 
 #endif  // CONFIG_READER_H

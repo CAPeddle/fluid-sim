@@ -3,16 +3,23 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "ConfigReader.hpp"  // Include the header file that defines the 'Config' class
 #include "MovingCircle.hpp"
 
 class MovingCircleFactory
 {
-    EnvironmentProperties m_environment = {.gravity = {0.f, 10.f}, .damping = {0.9}};
-    ParticleProperties m_default_particle = {.velocity{0.f, 0.f}, .radius{10}};
+    std::shared_ptr<EnvironmentProperties> m_environment;
+
+    ParticleProperties m_default_particle = {
+        .velocity{0.f, 0.f},
+        .radius{10}
+    };
     const sf::Vector2u m_windowSize;
 
+    std::shared_ptr<ConfigReader> m_config;
+
    public:
-    MovingCircleFactory(const sf::Vector2u &windowSize, const EnvironmentProperties &environment);
+    MovingCircleFactory(const sf::Vector2u &windowSize, std::shared_ptr<EnvironmentProperties> environment);
 
     MovingCircle createDefault();
     MovingCircle createCustom(const ParticleProperties &particle);

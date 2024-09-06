@@ -5,7 +5,8 @@
 #include <ctime>
 #include <iostream>
 
-MovingCircleFactory::MovingCircleFactory(const sf::Vector2u &windowSize, const EnvironmentProperties &environment)
+MovingCircleFactory::MovingCircleFactory(const sf::Vector2u &windowSize,
+                                         std::shared_ptr<EnvironmentProperties> environment)
     : m_windowSize(windowSize), m_environment(environment)
 {
     std::srand(std::time(nullptr));
@@ -16,12 +17,12 @@ MovingCircle MovingCircleFactory::createDefault()
     ParticleProperties defaultParticle{sf::Vector2f(0.f, 0.f),
                                        sf::Vector2f(m_windowSize.x / 2.f, m_windowSize.y / 2.f),
                                        50.f};
-    return MovingCircle(m_windowSize, std::make_shared<EnvironmentProperties>(m_environment), defaultParticle);
+    return MovingCircle(m_windowSize, m_environment, defaultParticle);
 }
 
 MovingCircle MovingCircleFactory::createCustom(const ParticleProperties &particle)
 {
-    return MovingCircle(m_windowSize, std::make_shared<EnvironmentProperties>(m_environment), particle);
+    return MovingCircle(m_windowSize, m_environment, particle);
 }
 
 MovingCircle MovingCircleFactory::createRandom()
@@ -34,7 +35,7 @@ MovingCircle MovingCircleFactory::createRandom()
     sf::Vector2f velocity{static_cast<float>(rand() % 100 - 50), static_cast<float>(rand() % 100 - 50)};
 
     ParticleProperties randomParticle{velocity, position, radius};
-    return MovingCircle(m_windowSize, std::make_shared<EnvironmentProperties>(m_environment), randomParticle);
+    return MovingCircle(m_windowSize, m_environment, randomParticle);
 }
 
 std::vector<MovingCircle> MovingCircleFactory::createBox(unsigned int particlesPerRow,

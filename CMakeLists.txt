@@ -16,8 +16,12 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-# Find yaml-cpp package
-find_package(yaml-cpp REQUIRED)
+FetchContent_Declare(
+  toml11
+  GIT_REPOSITORY https://github.com/ToruNiina/toml11.git
+  GIT_TAG        v4.1.0
+)
+FetchContent_MakeAvailable(toml11)
 
 # Include the header files from the "include" directory
 include_directories(${PROJECT_SOURCE_DIR}/inc)
@@ -35,7 +39,7 @@ set(SOURCES
 # Set the libraries to link
 set(LIBRARIES
     sfml-graphics
-    yaml-cpp
+    toml11::toml11
 )
 
 add_executable(main ${SOURCES})
