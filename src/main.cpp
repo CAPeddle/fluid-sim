@@ -57,8 +57,6 @@ int main()
             circle.update(dt);
         }
 
-        std::cout << "Main Gravity x: " << the_environment->gravity.x << "\n";
-
         BackGroundDisplay::calculateDensityAndColorBackground(window, circles);
 
         for (auto& circle : circles)

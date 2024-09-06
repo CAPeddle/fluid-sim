@@ -31,22 +31,31 @@ class EventHandler
                     break;
                 case sf::Keyboard::Num0:
                     m_environment->gravity.x += 1;
+                    std::cout << "Gravity x: " << m_environment->gravity.x << "\n";
                     break;
                 case sf::Keyboard::Num1:
                     m_environment->gravity.x -= 1;
+                    std::cout << "Gravity x: " << m_environment->gravity.x << "\n";
                     break;
                 case sf::Keyboard::Num2:
+                    m_environment->gravity.y -= 1;
+                    std::cout << "Gravity y: " << m_environment->gravity.y << "\n";
                     break;
                 case sf::Keyboard::Num3:
+                    m_environment->gravity.y += 1;
+                    std::cout << "Gravity y: " << m_environment->gravity.y << "\n";
                     break;
                 case sf::Keyboard::Num4:
+                    m_environment->influenceRange += 1;
+                    std::cout << "influenceRange: " << m_environment->influenceRange << "\n";
                     break;
                 case sf::Keyboard::Num5:
+                    m_environment->influenceRange -= 1;
+                    std::cout << "influenceRange: " << m_environment->influenceRange << "\n";
                     break;
                 default:
                     break;
             }
-            std::cout << "Gravity x: " << m_environment->gravity.x << "\n";
             // int thing = 0;
             // adjustVariableWithKeyPress(event.key, thing, -1);
         }
