@@ -2,6 +2,7 @@
 #define MOVINGCIRCLE_HPP
 
 #include <SFML/Graphics.hpp>
+#include <memory>
 
 #include "Environment.hpp"
 
@@ -16,7 +17,7 @@ class MovingCircle : public sf::CircleShape
 {
    public:
     MovingCircle(const sf::Vector2u &windowSize,
-                 const EnvironmentProperties &environment,
+                 std::shared_ptr<EnvironmentProperties> environment,
                  const ParticleProperties &particle);
 
     // Update method to update the circle's position based on a float deltaTime
@@ -27,7 +28,7 @@ class MovingCircle : public sf::CircleShape
    private:
     sf::Vector2u windowSize;
 
-    EnvironmentProperties m_environment;
+    std::shared_ptr<EnvironmentProperties> m_environment;
     ParticleProperties m_particleProperties;
     sf::Vector2f gravity{0.f, 10.f};
 };
