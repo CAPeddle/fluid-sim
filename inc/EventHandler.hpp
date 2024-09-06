@@ -5,9 +5,16 @@
 #include <SFML/Window/Event.hpp>
 #include <iostream>
 
+#include "Environment.hpp"
+
 class EventHandler
 {
    public:
+    EventHandler(std::shared_ptr<EnvironmentProperties> environment)
+        : m_environment(environment)
+    {
+    }
+
     void EventPoll(sf::RenderWindow& window, const sf::Event& event)
     {
         if (event.type == sf::Event::Closed)
@@ -17,12 +24,31 @@ class EventHandler
 
         if (event.type == sf::Event::KeyPressed)
         {
-            if (event.key.code == sf::Keyboard::Escape)
+            switch (event.key.code)
             {
-                window.close();
+                case sf::Keyboard::Escape:
+                    window.close();
+                    break;
+                case sf::Keyboard::Num0:
+                    m_environment->gravity.x += 1;
+                    break;
+                case sf::Keyboard::Num1:
+                    m_environment->gravity.x -= 1;
+                    break;
+                case sf::Keyboard::Num2:
+                    break;
+                case sf::Keyboard::Num3:
+                    break;
+                case sf::Keyboard::Num4:
+                    break;
+                case sf::Keyboard::Num5:
+                    break;
+                default:
+                    break;
             }
-            int thing = 0;
-            adjustVariableWithKeyPress(event.key, thing, -1);
+            std::cout << "Gravity x: " << m_environment->gravity.x << "\n";
+            // int thing = 0;
+            // adjustVariableWithKeyPress(event.key, thing, -1);
         }
 
         if (event.type == sf::Event::MouseButtonPressed)
@@ -57,6 +83,8 @@ class EventHandler
    private:
     bool isMousePressed = false;
 
+    std::shared_ptr<EnvironmentProperties> m_environment;
+
     void adjustVariableWithKeyPress(const sf::Event::KeyEvent& key_event, int& variable, int stepSize)
     {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
@@ -73,5 +101,6 @@ class EventHandler
         std::cout << "Current grid size: " << variable << "\n";
     }
 };
+;
 
 #endif

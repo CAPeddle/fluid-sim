@@ -16,21 +16,22 @@
 
 int main()
 {
-    ConfigReader configReader("resources/config.toml");
+    auto config_reader = std::make_shared<ConfigReader>("resources/config.toml");
 
-    auto resolution = configReader.getResolution();
+    auto resolution = config_reader->getResolution();
     // todo: add error handling for sfml window
     sf::RenderWindow window(sf::VideoMode(resolution.first, resolution.second), "C++ Fluid Simulation");
 
-    EnvironmentProperties the_environment(std::make_shared<ConfigReader>(configReader));
+    // EnvironmentProperties the_environment(std::make_shared<ConfigReader>(configReader));
 
+    auto the_environment = std::make_shared<EnvironmentProperties>(config_reader);
     // clang-format off
     ParticleProperties particle_properties = {
         .radius = 5.f
         };
     // clang-format on
 
-    MovingCircleFactory circle_factory(window.getSize(), std::make_shared<EnvironmentProperties>(the_environment));
+    MovingCircleFactory circle_factory(window.getSize(), the_environment);
 
     std::vector<MovingCircle> circles;
     circles = circle_factory.createBox(5, 5, particle_properties);
@@ -39,7 +40,7 @@ int main()
     Grid grid(window.getSize(), 10);
 
     sf::Clock clock;
-    EventHandler eventHandler;
+    EventHandler eventHandler(the_environment);
     while (window.isOpen())
     {
         sf::Event event;
@@ -55,6 +56,8 @@ int main()
         {
             circle.update(dt);
         }
+
+        std::cout << "Main Gravity x: " << the_environment->gravity.x << "\n";
 
         BackGroundDisplay::calculateDensityAndColorBackground(window, circles);
 
