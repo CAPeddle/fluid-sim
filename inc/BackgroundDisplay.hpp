@@ -14,6 +14,7 @@ class GridSizeException : public std::runtime_error
     }
 };
 
+// TODO: This class is ugly, refactor it
 class BackGroundDisplay
 {
    public:

@@ -15,8 +15,6 @@
 
 int main()
 {
-    std::vector<MovingCircle> circles;
-
     sf::RenderWindow window(sf::VideoMode(600, 400), "SFML kinda works!");
 
     sf::Font font;
@@ -40,6 +38,7 @@ int main()
 
     MovingCircleFactory circle_factory(window.getSize(), the_environment);
 
+    std::vector<MovingCircle> circles;
     circles = circle_factory.createBox(5, 5, particle_properties);
 
     // circles = circle_factory.fillRandom(19, particle_properties);

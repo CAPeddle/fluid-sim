@@ -11,8 +11,9 @@ MovingCircle::MovingCircle(const sf::Vector2u &windowSize,
       m_environment(environment),
       m_particleProperties(particle)
 {
+    // TODO: add sequence of force vectors to particle properties
     setOrigin(particle.radius, particle.radius);
-    setFillColor(sf::Color::Green);
+    setFillColor(sf::Color::Green);  // TODO: change color based on velocity
     setPosition(particle.position);
 }
 
