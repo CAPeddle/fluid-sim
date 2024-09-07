@@ -5,6 +5,6 @@ resolution.width = 600
 resolution.height = 400
 
 [environment]
-gravity = { x = 0.0, y = 10.0 }
+gravity = { x = 0.0, y = 0.0 }
 damping = 0.5
 influenceRange = 30.0

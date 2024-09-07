@@ -12,10 +12,10 @@ class EnvironmentProperties
     EnvironmentProperties(std::shared_ptr<ConfigReader> configReader)
         : configReader_(configReader)
     {
-        auto gravity = configReader->getGravity();
+        auto config_gravity = configReader->getGravity();
         auto influenceRange = configReader->getInfluenceRange();
 
-        gravity = {gravity.first, gravity.second};
+        gravity = {config_gravity.first, config_gravity.second};
         damping = 0.9;
         influenceRange = influenceRange;
 

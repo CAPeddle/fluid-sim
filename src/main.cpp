@@ -2,6 +2,8 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SimProperties.hpp>
+#include <Vector.hpp>
 #include <cmath>
 #include <iostream>
 #include <string>
@@ -34,10 +36,12 @@ int main()
     MovingCircleFactory circle_factory(window.getSize(), the_environment);
 
     std::vector<MovingCircle> circles;
-    circles = circle_factory.createBox(5, 5, particle_properties);
+    // circles = circle_factory.createBox(5, 5, particle_properties);
 
-    // circles = circle_factory.fillRandom(19, particle_properties);
+    circles = circle_factory.fillRandom(19, particle_properties);
     Grid grid(window.getSize(), 10);
+
+    // Create a VectorDrawable object
 
     sf::Clock clock;
     EventHandler eventHandler(the_environment);
@@ -64,6 +68,18 @@ int main()
             window.draw(circle);
         }
 
+        auto clickLocation = eventHandler.getMouseClickLocation(event);
+        if (clickLocation)
+        {
+            sf::Vector2f end(100.f, 100.f);
+
+            auto gradient = SimProperties::calculateDensityGradient(*clickLocation, circles);
+            sf::Vector2f start(clickLocation->x, clickLocation->y);
+            VectorDrawable vectorDrawable(start, gradient);
+            window.draw(vectorDrawable);
+        }
+
+        // Draw the vector
         /*  -----------  */
         window.display();
     }

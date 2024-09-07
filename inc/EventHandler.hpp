@@ -4,6 +4,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Event.hpp>
 #include <iostream>
+#include <optional>
 
 #include "Environment.hpp"
 
@@ -13,6 +14,23 @@ class EventHandler
     EventHandler(std::shared_ptr<EnvironmentProperties> environment)
         : m_environment(environment)
     {
+    }
+
+    std::optional<sf::Vector2f> getMouseClickLocation(const sf::Event& event)
+    {
+        if (event.type == sf::Event::MouseButtonPressed)
+        {
+            if (event.mouseButton.button == sf::Mouse::Left)
+            {
+                isMousePressed = true;
+                std::cout << "the left button was pressed" << std::endl;
+                std::cout << "mouse x: " << event.mouseButton.x << std::endl;
+                std::cout << "mouse y: " << event.mouseButton.y << std::endl;
+            }
+            return sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
+        }
+
+        return std::nullopt;
     }
 
     void EventPoll(sf::RenderWindow& window, const sf::Event& event)
