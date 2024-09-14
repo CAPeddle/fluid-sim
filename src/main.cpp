@@ -24,34 +24,41 @@ int main()
     // todo: add error handling for sfml window
     sf::RenderWindow window(sf::VideoMode(resolution.first, resolution.second), "C++ Fluid Simulation");
 
-    // EnvironmentProperties the_environment(std::make_shared<ConfigReader>(configReader));
-
     auto the_environment = std::make_shared<EnvironmentProperties>(config_reader);
-    // clang-format off
-    ParticleProperties particle_properties = {
-        .radius = 5.f
-        };
-    // clang-format on
-
-    MovingCircleFactory circle_factory(window.getSize(), the_environment);
+    BackGroundDisplay background_display(config_reader);
+    ParticleProperties particle_properties(config_reader);
+    MovingCircleFactory circle_factory(window.getSize(), the_environment, config_reader);
 
     std::vector<MovingCircle> circles;
     // circles = circle_factory.createBox(5, 5, particle_properties);
 
-    circles = circle_factory.fillRandom(19, particle_properties);
+    circles = circle_factory.fillRandom(5, particle_properties);
     Grid grid(window.getSize(), 10);
 
-    // Create a VectorDrawable object
+    // Create text object for FPS display
+    // Load font
+    sf::Font font;
+    if (!font.loadFromFile(config_reader->getFontPath()))
+    {
+        throw std::runtime_error("Failed to load font");
+    }
+
+    sf::Text fpsText;
+    fpsText.setFont(font);
+    fpsText.setCharacterSize(24);
+    fpsText.setFillColor(sf::Color::White);
+    fpsText.setPosition(10.f, 10.f);
 
     sf::Clock clock;
     EventHandler eventHandler(the_environment);
     while (window.isOpen())
     {
         sf::Event event;
+        sf::Event happened;
         float dt = clock.restart().asSeconds();
         while (window.pollEvent(event))
         {
-            eventHandler.EventPoll(window, event);
+            happened = eventHandler.EventPoll(window, event);
         }
         window.clear(sf::Color::Black);
         /*  -----------  */
@@ -61,23 +68,32 @@ int main()
             circle.update(dt);
         }
 
-        BackGroundDisplay::calculateDensityAndColorBackground(window, circles);
+        // BackGroundDisplay::calculateDensityAndColorBackground(window, circles);
 
         for (auto& circle : circles)
         {
             window.draw(circle);
         }
 
-        auto clickLocation = eventHandler.getMouseClickLocation(event);
-        if (clickLocation)
-        {
-            sf::Vector2f end(100.f, 100.f);
+        background_display.calculateDensityAndDrawVectors(window, circles);
 
-            auto gradient = SimProperties::calculateDensityGradient(*clickLocation, circles);
-            sf::Vector2f start(clickLocation->x, clickLocation->y);
-            VectorDrawable vectorDrawable(start, gradient);
-            window.draw(vectorDrawable);
+        if (happened.type == sf::Event::MouseButtonPressed)
+        {
+            auto clickLocation = eventHandler.getMouseClickLocation(happened);
+            if (clickLocation)
+            {
+                auto gradient = SimProperties::calculateDensityGradient(*clickLocation, circles);
+                std::cout << "Gradient: " << gradient.x << ", " << gradient.y << std::endl;
+                sf::Vector2f start(clickLocation->x, clickLocation->y);
+                VectorDrawable vectorDrawable(start, start + gradient);
+                window.draw(vectorDrawable);
+            }
         }
+
+        // Calculate and display FPS
+        float fps = 1.f / dt;
+        fpsText.setString("FPS: " + std::to_string(static_cast<int>(fps)));
+        window.draw(fpsText);
 
         // Draw the vector
         /*  -----------  */

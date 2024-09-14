@@ -12,9 +12,15 @@ class ConfigReader
 
     std::pair<float, float> getGravity() const;
 
+    int getGridSize() const;
+
+    float getParticleRadius() const;
+
     float getInfluenceRange() const;
 
     std::string getFontPath() const;
+
+    float getDamping() const;
 
     std::pair<unsigned int, unsigned int> getResolution() const;
 

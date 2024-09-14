@@ -6,15 +6,11 @@
 #include <iostream>
 
 MovingCircleFactory::MovingCircleFactory(const sf::Vector2u &windowSize,
-                                         std::shared_ptr<EnvironmentProperties> environment)
-    : m_windowSize(windowSize), m_environment(environment)
+                                         std::shared_ptr<EnvironmentProperties> environment,
+                                         std::shared_ptr<ConfigReader> configReader)
+    : m_windowSize(windowSize), m_environment(environment), m_configReader(configReader)
 {
     std::srand(std::time(nullptr));
-}
-
-MovingCircle MovingCircleFactory::createDefault()
-{
-    return MovingCircle(m_windowSize, m_environment, m_defaultParticle);
 }
 
 MovingCircle MovingCircleFactory::createCustom(const ParticleProperties &particle)
@@ -31,7 +27,11 @@ MovingCircle MovingCircleFactory::createRandom()
 
     sf::Vector2f velocity{static_cast<float>(rand() % 100 - 50), static_cast<float>(rand() % 100 - 50)};
 
-    ParticleProperties randomParticle{velocity, position, radius};
+    ParticleProperties randomParticle(m_configReader);
+    randomParticle.position = position;
+    randomParticle.velocity = velocity;
+    randomParticle.radius = radius;
+
     return MovingCircle(m_windowSize, m_environment, randomParticle);
 }
 

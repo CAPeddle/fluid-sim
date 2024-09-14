@@ -33,8 +33,9 @@ class EventHandler
         return std::nullopt;
     }
 
-    void EventPoll(sf::RenderWindow& window, const sf::Event& event)
+    sf::Event EventPoll(sf::RenderWindow& window, const sf::Event& event)
     {
+        sf::Event happened;
         if (event.type == sf::Event::Closed)
         {
             window.close();
@@ -80,6 +81,7 @@ class EventHandler
 
         if (event.type == sf::Event::MouseButtonPressed)
         {
+            happened = event;
             if (event.mouseButton.button == sf::Mouse::Left)
             {
                 isMousePressed = true;
@@ -89,22 +91,23 @@ class EventHandler
             }
         }
 
-        if (isMousePressed && event.type == sf::Event::MouseMoved)
-        {
-            std::cout << "new mouse x: " << event.mouseMove.x << std::endl;
-            std::cout << "new mouse y: " << event.mouseMove.y << std::endl;
-        }
+        // if (isMousePressed && event.type == sf::Event::MouseMoved)
+        // {
+        //     std::cout << "new mouse x: " << event.mouseMove.x << std::endl;
+        //     std::cout << "new mouse y: " << event.mouseMove.y << std::endl;
+        // }
 
-        if (event.type == sf::Event::MouseButtonReleased)
-        {
-            if (event.mouseButton.button == sf::Mouse::Left)
-            {
-                isMousePressed = false;
-                std::cout << "the left button was released" << std::endl;
-                std::cout << "mouse x: " << event.mouseButton.x << std::endl;
-                std::cout << "mouse y: " << event.mouseButton.y << std::endl;
-            }
-        }
+        // if (event.type == sf::Event::MouseButtonReleased)
+        // {
+        //     if (event.mouseButton.button == sf::Mouse::Left)
+        //     {
+        //         isMousePressed = false;
+        //         std::cout << "the left button was released" << std::endl;
+        //         std::cout << "mouse x: " << event.mouseButton.x << std::endl;
+        //         std::cout << "mouse y: " << event.mouseButton.y << std::endl;
+        //     }
+        // }
+        return happened;
     }
 
    private:

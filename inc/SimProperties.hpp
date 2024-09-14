@@ -26,7 +26,7 @@ class SimProperties
     static sf::Vector2f calculateDensityGradient(const sf::Vector2f& ref_point,
                                                  const std::vector<MovingCircle>& circles)
     {
-        const float stepSize = 1;
+        const float stepSize = 0.1;
         float deltaX
             = calculateDensity(ref_point + sf::Vector2f(stepSize, 0), circles) - calculateDensity(ref_point, circles);
         float deltaY

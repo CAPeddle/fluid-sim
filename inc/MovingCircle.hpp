@@ -4,10 +4,14 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 
+#include "ConfigReader.hpp"
 #include "Environment.hpp"
 
-struct ParticleProperties
+class ParticleProperties
 {
+   public:
+    ParticleProperties(std::shared_ptr<ConfigReader> configReader) { radius = configReader->getParticleRadius(); }
+
     sf::Vector2f velocity{0.f, 0.f};
     sf::Vector2f position;
     float radius;

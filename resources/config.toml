@@ -3,8 +3,10 @@
 fontPath = "resources/3230-font.ttf"
 resolution.width = 600
 resolution.height = 400
+grid = 10
+particle.radius = 5.0
 
 [environment]
 gravity = { x = 0.0, y = 0.0 }
 damping = 0.5
-influenceRange = 30.0
+influenceRange = 40.0

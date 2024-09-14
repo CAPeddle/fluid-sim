@@ -18,7 +18,16 @@ class GridSizeException : public std::runtime_error
 class BackGroundDisplay
 {
    public:
-    static void calculateDensityAndColorBackground(sf::RenderWindow& window, const std::vector<MovingCircle>& circles);
+    BackGroundDisplay(std::shared_ptr<ConfigReader> configReader)
+        : configReader_(configReader)
+    {
+    }
+
+    void calculateDensityAndColorBackground(sf::RenderWindow& window, const std::vector<MovingCircle>& circles);
+    void calculateDensityAndDrawVectors(sf::RenderWindow& window, const std::vector<MovingCircle>& circles);
+
+   private:
+    std::shared_ptr<ConfigReader> configReader_;
 };
 
 #endif  // BACKGROUNDDISPLAY_HPP

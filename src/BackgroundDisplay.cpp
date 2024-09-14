@@ -1,7 +1,10 @@
 #include "BackgroundDisplay.hpp"
 
+#include <Vector.hpp>
 #include <cmath>
 #include <iostream>
+
+#include "SimProperties.hpp"
 
 int findNearestGridSize(sf::Vector2u windowSize, int desiredGridSize)
 {
@@ -33,7 +36,7 @@ void BackGroundDisplay::calculateDensityAndColorBackground(sf::RenderWindow& win
                                                            const std::vector<MovingCircle>& circles)
 {
     sf::Vector2u windowSize = window.getSize();
-    const int desiredGridSize = 5;  // Size of each grid cell
+    const int desiredGridSize = configReader_->getGridSize();  // Size of each grid cell
     const int numRows = windowSize.y / desiredGridSize;
     const int numCols = windowSize.x / desiredGridSize;
 
@@ -86,4 +89,50 @@ void BackGroundDisplay::calculateDensityAndColorBackground(sf::RenderWindow& win
             window.draw(cell);
         }
     }
+}
+
+void BackGroundDisplay::calculateDensityAndDrawVectors(sf::RenderWindow& window,
+                                                       const std::vector<MovingCircle>& circles)
+{
+    sf::Vector2u windowSize = window.getSize();
+    const int desiredGridSize = configReader_->getGridSize();  // Size of each grid cell
+    const int numRows = windowSize.y / desiredGridSize;
+    const int numCols = windowSize.x / desiredGridSize;
+
+    static int gridSize = 0;
+    if (gridSize == 0)
+    {
+        try
+        {
+            gridSize = findNearestGridSize(windowSize, desiredGridSize);
+        }
+        catch (const GridSizeException& e)
+        {
+            std::cerr << "Error: " << e.what() << "\n";
+        }
+    }
+
+    std::vector<std::vector<float>> densityGrid(numRows, std::vector<float>(numCols, 0.0f));
+
+    float maxDensity = 0;
+    // Calculate density with influence functions
+    for (const auto& circle : circles)
+    {
+        for (int row = 0; row < numRows; ++row)
+        {
+            for (int col = 0; col < numCols; ++col)
+            {
+                sf::Vector2f cellCenter(col * gridSize + gridSize / 2.0f, row * gridSize + gridSize / 2.0f);
+
+                auto gradient = SimProperties::calculateDensityGradient(cellCenter, circles);
+                VectorDrawable vectorDrawable(cellCenter, cellCenter + gradient);
+                window.draw(vectorDrawable);
+
+                float temp = circle.influence(cellCenter);
+                densityGrid[row][col] += temp;
+                maxDensity = std::max(maxDensity, densityGrid[row][col]);  // Update maxDensity with the total density
+            }
+        }
+    }
+    std::cout << "Max Density: " << maxDensity << std::endl;
 }

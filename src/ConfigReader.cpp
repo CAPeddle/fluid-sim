@@ -43,6 +43,15 @@ std::pair<float, float> ConfigReader::getGravity() const
     return gravityVector;
 }
 
+int ConfigReader::getGridSize() const { return m_root.at("simulation").at("grid").as_integer(); }
+
+float ConfigReader::getParticleRadius() const
+{
+    return m_root.at("simulation").at("particle").at("radius").as_floating();
+}
+
 float ConfigReader::getInfluenceRange() const { return m_root.at("environment").at("influenceRange").as_floating(); }
 
 std::string ConfigReader::getFontPath() const { return m_root.at("simulation").at("fontPath").as_string(); }
+
+float ConfigReader::getDamping() const { return m_root.at("environment").at("damping").as_floating(); }
