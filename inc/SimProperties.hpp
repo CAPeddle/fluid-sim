@@ -11,20 +11,20 @@ class SimProperties
     {
     }
 
-    static double calculateDensity(const sf::Vector2f& ref_point, const std::vector<MovingCircle>& circles)
+    static double calculateDensity(const sf::Vector2f& ref_point, std::vector<std::shared_ptr<MovingCircle>> circles)
     {
         float mass = 1;
         float density;
         for (const auto& circle : circles)
         {
-            density += mass * circle.influence(ref_point);
+            density += mass * circle->influence(ref_point);
         }
 
         return density;
     }
 
     static sf::Vector2f calculateDensityGradient(const sf::Vector2f& ref_point,
-                                                 const std::vector<MovingCircle>& circles)
+                                                 std::vector<std::shared_ptr<MovingCircle>> circles)
     {
         const float stepSize = 0.1;
         float deltaX

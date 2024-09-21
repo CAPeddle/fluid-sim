@@ -20,10 +20,11 @@ class MovingCircleFactory
     MovingCircle createCustom(const ParticleProperties &particle);
     MovingCircle createRandom();
 
-    std::vector<MovingCircle> createBox(unsigned int particlesPerRow,
-                                        unsigned int particlesPerCol,
-                                        const ParticleProperties properties);
-    std::vector<MovingCircle> fillRandom(unsigned int num_particles, const ParticleProperties properties);
+    std::vector<std::shared_ptr<MovingCircle>> createBox(unsigned int particlesPerRow,
+                                                         unsigned int particlesPerCol,
+                                                         const ParticleProperties properties);
+    std::vector<std::shared_ptr<MovingCircle>> fillRandom(unsigned int num_particles,
+                                                          const ParticleProperties properties);
 };
 
 #endif  // MOVINGCIRCLEFACTORY_HPP

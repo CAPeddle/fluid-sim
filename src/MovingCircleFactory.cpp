@@ -35,11 +35,11 @@ MovingCircle MovingCircleFactory::createRandom()
     return MovingCircle(m_windowSize, m_environment, randomParticle);
 }
 
-std::vector<MovingCircle> MovingCircleFactory::createBox(unsigned int particlesPerRow,
-                                                         unsigned int particlesPerCol,
-                                                         const ParticleProperties properties)
+std::vector<std::shared_ptr<MovingCircle>> MovingCircleFactory::createBox(unsigned int particlesPerRow,
+                                                                          unsigned int particlesPerCol,
+                                                                          const ParticleProperties properties)
 {
-    std::vector<MovingCircle> circles;
+    std::vector<std::shared_ptr<MovingCircle>> circles;
     circles.reserve(particlesPerCol * particlesPerRow);
 
     auto spacing = 2 * properties.radius + (properties.radius * 0.2);
@@ -52,16 +52,16 @@ std::vector<MovingCircle> MovingCircleFactory::createBox(unsigned int particlesP
         particle_properties.position.y
             = (i / particlesPerRow - particlesPerCol / 2.f + 0.5) * spacing + (m_windowSize.y / 2);
 
-        circles.emplace_back(createCustom(particle_properties));
+        circles.emplace_back(std::make_shared<MovingCircle>(createCustom(particle_properties)));
     }
 
     return circles;
 }
 
-std::vector<MovingCircle> MovingCircleFactory::fillRandom(unsigned int num_particles,
-                                                          const ParticleProperties properties)
+std::vector<std::shared_ptr<MovingCircle>> MovingCircleFactory::fillRandom(unsigned int num_particles,
+                                                                           const ParticleProperties properties)
 {
-    std::vector<MovingCircle> circles;
+    std::vector<std::shared_ptr<MovingCircle>> circles;
     circles.reserve(num_particles);
 
     auto spacing = 2 * properties.radius + (properties.radius * 0.2);
@@ -76,7 +76,7 @@ std::vector<MovingCircle> MovingCircleFactory::fillRandom(unsigned int num_parti
 
         particle_properties.position = position;
 
-        circles.emplace_back(createCustom(particle_properties));
+        circles.emplace_back(std::make_shared<MovingCircle>(createCustom(particle_properties)));
     }
 
     return circles;

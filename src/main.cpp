@@ -29,7 +29,7 @@ int main()
     ParticleProperties particle_properties(config_reader);
     MovingCircleFactory circle_factory(window.getSize(), the_environment, config_reader);
 
-    std::vector<MovingCircle> circles;
+    std::vector<std::shared_ptr<MovingCircle>> circles;
     // circles = circle_factory.createBox(5, 5, particle_properties);
 
     circles = circle_factory.fillRandom(5, particle_properties);
@@ -65,14 +65,14 @@ int main()
 
         for (auto& circle : circles)
         {
-            circle.update(dt);
+            circle->update(dt);
         }
 
         // BackGroundDisplay::calculateDensityAndColorBackground(window, circles);
 
         for (auto& circle : circles)
         {
-            window.draw(circle);
+            window.draw(*circle);
         }
 
         background_display.calculateDensityAndDrawVectors(window, circles);

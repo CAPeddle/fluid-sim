@@ -24,7 +24,7 @@ class BackGroundDisplay
     }
 
     void calculateDensityAndColorBackground(sf::RenderWindow& window, const std::vector<MovingCircle>& circles);
-    void calculateDensityAndDrawVectors(sf::RenderWindow& window, const std::vector<MovingCircle>& circles);
+    void calculateDensityAndDrawVectors(sf::RenderWindow& window, std::vector<std::shared_ptr<MovingCircle>> circles);
 
    private:
     std::shared_ptr<ConfigReader> configReader_;
