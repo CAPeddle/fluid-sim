@@ -6,7 +6,7 @@
 
 #include "SimProperties.hpp"
 
-int findNearestGridSize(sf::Vector2u windowSize, int desiredGridSize)
+int BackGroundDisplay::findNearestGridSize(sf::Vector2u windowSize, int desiredGridSize)
 {
     // Calculate the potential grid sizes for both dimensions
     int nearestX = std::round(static_cast<float>(windowSize.x) / desiredGridSize) * desiredGridSize;
@@ -19,15 +19,17 @@ int findNearestGridSize(sf::Vector2u windowSize, int desiredGridSize)
     }
 
     // Check if there is a common grid size that is a multiple of both dimensions
-    for (int gridSize = desiredGridSize; gridSize > 0; --gridSize)
+    for (int display_gridSize = desiredGridSize; display_gridSize > 0; --display_gridSize)
     {
-        if (windowSize.x % gridSize == 0 && windowSize.y % gridSize == 0)
+        if (windowSize.x % display_gridSize == 0 && windowSize.y % display_gridSize == 0)
         {
-            return gridSize;
+            return display_gridSize;
         }
     }
 
-    // If we cannot find a valid grid size, throw an exception
+    // TODO Change window size to fit the grid size
+
+    //  If we cannot find a valid grid size, throw an exception
     throw GridSizeException(
         "It is not possible to create a grid size that is a multiple of both x and y dimensions of the window size.");
 }
@@ -37,15 +39,15 @@ void BackGroundDisplay::calculateDensityAndColorBackground(sf::RenderWindow& win
 {
     sf::Vector2u windowSize = window.getSize();
     const int desiredGridSize = configReader_->getGridSize();  // Size of each grid cell
-    const int numRows = windowSize.y / desiredGridSize;
-    const int numCols = windowSize.x / desiredGridSize;
+    const int numRows_display = windowSize.y / desiredGridSize;
+    const int numCols_display = windowSize.x / desiredGridSize;
 
-    static int gridSize = 0;
-    if (gridSize == 0)
+    static int display_gridSize = 0;
+    if (display_gridSize == 0)
     {
         try
         {
-            gridSize = findNearestGridSize(windowSize, desiredGridSize);
+            display_gridSize = findNearestGridSize(windowSize, desiredGridSize);
         }
         catch (const GridSizeException& e)
         {
@@ -53,17 +55,18 @@ void BackGroundDisplay::calculateDensityAndColorBackground(sf::RenderWindow& win
         }
     }
 
-    std::vector<std::vector<float>> densityGrid(numRows, std::vector<float>(numCols, 0.0f));
+    std::vector<std::vector<float>> densityGrid(numRows_display, std::vector<float>(numCols_display, 0.0f));
 
     float maxDensity = 0;
     // Calculate density with influence functions
     for (const auto& circle : circles)
     {
-        for (int row = 0; row < numRows; ++row)
+        for (int row = 0; row < numRows_display; ++row)
         {
-            for (int col = 0; col < numCols; ++col)
+            for (int col = 0; col < numCols_display; ++col)
             {
-                sf::Vector2f cellCenter(col * gridSize + gridSize / 2.0f, row * gridSize + gridSize / 2.0f);
+                sf::Vector2f cellCenter(col * display_gridSize + display_gridSize / 2.0f,
+                                        row * display_gridSize + display_gridSize / 2.0f);
                 float temp = circle.influence(cellCenter);
                 densityGrid[row][col] += temp;
                 maxDensity = std::max(maxDensity, densityGrid[row][col]);  // Update maxDensity with the total density
@@ -72,17 +75,17 @@ void BackGroundDisplay::calculateDensityAndColorBackground(sf::RenderWindow& win
     }
 
     // Color the background based on density
-    for (int row = 0; row < numRows; ++row)
+    for (int row = 0; row < numRows_display; ++row)
     {
-        for (int col = 0; col < numCols; ++col)
+        for (int col = 0; col < numCols_display; ++col)
         {
             float density = densityGrid[row][col];
 
             // Scale the density to the 0-255 range based on maxDensity
             int intensity = maxDensity > 0 ? std::min(255, static_cast<int>((density / maxDensity) * 255)) : 0;
 
-            sf::RectangleShape cell(sf::Vector2f(gridSize, gridSize));
-            cell.setPosition(col * gridSize, row * gridSize);
+            sf::RectangleShape cell(sf::Vector2f(display_gridSize, display_gridSize));
+            cell.setPosition(col * display_gridSize, row * display_gridSize);
 
             // Red color with intensity scaled by density
             cell.setFillColor(sf::Color(intensity, 0, 255 - intensity));  // Blue to Red gradient
@@ -91,52 +94,59 @@ void BackGroundDisplay::calculateDensityAndColorBackground(sf::RenderWindow& win
     }
 }
 
-void BackGroundDisplay::calculateDensityAndDrawVectors(sf::RenderWindow& window,
-                                                       std::vector<std::shared_ptr<MovingCircle>> circles)
+void BackGroundDisplay::calculateDensityAndDrawVectors(const std::vector<std::shared_ptr<MovingCircle>>& circles)
 {
-    sf::Vector2u windowSize = window.getSize();
+    sf::Vector2u windowSize = renderWindow_.getSize();
     const int desiredGridSize = configReader_->getGridSize();  // Size of each grid cell
+    const int influenceRange = static_cast<int>(2 * configReader_->getInfluenceRange());
 
-    static int gridSize = 0;
-    if (gridSize == 0)
+    const int numRows_display = windowSize.y / m_display_gridSize;
+    const int numCols_display = windowSize.x / m_display_gridSize;
+
+    static int region_gridSize = 0;
+    if (region_gridSize == 0)
     {
         try
         {
-            gridSize = findNearestGridSize(windowSize, desiredGridSize);
+            region_gridSize = findNearestGridSize(windowSize, influenceRange);
         }
         catch (const GridSizeException& e)
         {
             std::cerr << "Error: " << e.what() << "\n";
         }
+        std::cout << "Region Grid Size: " << region_gridSize << std::endl;
     }
-    const int numRows = windowSize.y / gridSize;
-    const int numCols = windowSize.x / gridSize;
+    const int numRows_region = windowSize.y / region_gridSize;
+    const int numCols_region = windowSize.x / region_gridSize;
 
-    std::vector<std::vector<float>> densityGrid(numRows, std::vector<float>(numCols, 0.0f));
+    std::vector<std::vector<float>> densityGrid(numRows_display, std::vector<float>(numCols_display, 0.0f));
 
     // Precompute cell centers
-    std::vector<std::vector<sf::Vector2f>> cellCenters(numRows, std::vector<sf::Vector2f>(numCols));
-    for (int row = 0; row < numRows; ++row)
+    std::vector<std::vector<sf::Vector2f>> cellCenters(numRows_display, std::vector<sf::Vector2f>(numCols_display));
+    for (int row = 0; row < numRows_display; ++row)
     {
-        for (int col = 0; col < numCols; ++col)
+        for (int col = 0; col < numCols_display; ++col)
         {
-            cellCenters[row][col] = sf::Vector2f(col * gridSize + gridSize / 2.0f, row * gridSize + gridSize / 2.0f);
+            cellCenters[row][col] = sf::Vector2f(col * m_display_gridSize + m_display_gridSize / 2.0f,
+                                                 row * m_display_gridSize + m_display_gridSize / 2.0f);
         }
     }
+
+    // TODO Create simulation grids and populate them with circles
 
     float maxDensity = 0;
     // Calculate density with influence functions
     for (const auto& circle : circles)
     {
-        for (int row = 0; row < numRows; ++row)
+        for (int row = 0; row < numRows_display; ++row)
         {
-            for (int col = 0; col < numCols; ++col)
+            for (int col = 0; col < numCols_display; ++col)
             {
                 const sf::Vector2f& cellCenter = cellCenters[row][col];
 
                 auto gradient = SimProperties::calculateDensityGradient(cellCenter, circles);
                 VectorDrawable vectorDrawable(cellCenter, cellCenter + gradient);
-                window.draw(vectorDrawable);
+                renderWindow_.draw(vectorDrawable);
 
                 float temp = circle->influence(cellCenter);
                 densityGrid[row][col] += temp;
@@ -144,5 +154,5 @@ void BackGroundDisplay::calculateDensityAndDrawVectors(sf::RenderWindow& window,
             }
         }
     }
-    std::cout << "Max Density: " << maxDensity << std::endl;
+    // std::cout << "Max Density: " << maxDensity << std::endl;
 }

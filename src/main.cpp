@@ -25,7 +25,7 @@ int main()
     sf::RenderWindow window(sf::VideoMode(resolution.first, resolution.second), "C++ Fluid Simulation");
 
     auto the_environment = std::make_shared<EnvironmentProperties>(config_reader);
-    BackGroundDisplay background_display(config_reader);
+    BackGroundDisplay background_display(config_reader, window);
     ParticleProperties particle_properties(config_reader);
     MovingCircleFactory circle_factory(window.getSize(), the_environment, config_reader);
 
@@ -75,7 +75,7 @@ int main()
             window.draw(*circle);
         }
 
-        background_display.calculateDensityAndDrawVectors(window, circles);
+        background_display.calculateDensityAndDrawVectors(circles);
 
         if (happened.type == sf::Event::MouseButtonPressed)
         {
