@@ -6,6 +6,9 @@
 
 #include "SimProperties.hpp"
 
+// Define m_display_gridSize
+int m_display_gridSize = 10;  // or any appropriate value
+
 int BackGroundDisplay::findNearestGridSize(sf::Vector2u windowSize, int desiredGridSize)
 {
     // Calculate the potential grid sizes for both dimensions
@@ -100,35 +103,21 @@ void BackGroundDisplay::calculateDensityAndDrawVectors(const std::vector<std::sh
     const int desiredGridSize = configReader_->getGridSize();  // Size of each grid cell
     const int influenceRange = static_cast<int>(2 * configReader_->getInfluenceRange());
 
-    const int numRows_display = windowSize.y / m_display_gridSize;
-    const int numCols_display = windowSize.x / m_display_gridSize;
+    std::vector<std::vector<float>> densityGrid(m_numRows_display, std::vector<float>(m_numCols_display, 0.0f));
 
-    static int region_gridSize = 0;
-    if (region_gridSize == 0)
+    // Define a grid to hold vectors of shared pointers to MovingCircle
+    std::vector<std::vector<std::vector<std::shared_ptr<MovingCircle>>>> circleGrid(
+        m_numRows_display,
+        std::vector<std::vector<std::shared_ptr<MovingCircle>>>(m_numCols_display));
+
+    // Assign circles to grid cells
+    for (const auto& circle : circles)
     {
-        try
+        int col = static_cast<int>(circle->getPosition().x) / m_display_gridSize;
+        int row = static_cast<int>(circle->getPosition().y) / m_display_gridSize;
+        if (row >= 0 && row < m_numRows_display && col >= 0 && col < m_numCols_display)
         {
-            region_gridSize = findNearestGridSize(windowSize, influenceRange);
-        }
-        catch (const GridSizeException& e)
-        {
-            std::cerr << "Error: " << e.what() << "\n";
-        }
-        std::cout << "Region Grid Size: " << region_gridSize << std::endl;
-    }
-    const int numRows_region = windowSize.y / region_gridSize;
-    const int numCols_region = windowSize.x / region_gridSize;
-
-    std::vector<std::vector<float>> densityGrid(numRows_display, std::vector<float>(numCols_display, 0.0f));
-
-    // Precompute cell centers
-    std::vector<std::vector<sf::Vector2f>> cellCenters(numRows_display, std::vector<sf::Vector2f>(numCols_display));
-    for (int row = 0; row < numRows_display; ++row)
-    {
-        for (int col = 0; col < numCols_display; ++col)
-        {
-            cellCenters[row][col] = sf::Vector2f(col * m_display_gridSize + m_display_gridSize / 2.0f,
-                                                 row * m_display_gridSize + m_display_gridSize / 2.0f);
+            circleGrid[row][col].push_back(circle);
         }
     }
 
@@ -138,11 +127,11 @@ void BackGroundDisplay::calculateDensityAndDrawVectors(const std::vector<std::sh
     // Calculate density with influence functions
     for (const auto& circle : circles)
     {
-        for (int row = 0; row < numRows_display; ++row)
+        for (int row = 0; row < m_numRows_display; ++row)
         {
-            for (int col = 0; col < numCols_display; ++col)
+            for (int col = 0; col < m_numCols_display; ++col)
             {
-                const sf::Vector2f& cellCenter = cellCenters[row][col];
+                const sf::Vector2f& cellCenter = m_cellCenters[row][col];
 
                 auto gradient = SimProperties::calculateDensityGradient(cellCenter, circles);
                 VectorDrawable vectorDrawable(cellCenter, cellCenter + gradient);
