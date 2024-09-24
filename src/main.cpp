@@ -32,7 +32,7 @@ int main()
     std::vector<std::shared_ptr<MovingCircle>> circles;
     // circles = circle_factory.createBox(5, 5, particle_properties);
 
-    circles = circle_factory.fillRandom(5, particle_properties);
+    circles = circle_factory.fillRandom(15, particle_properties);
     Grid grid(window.getSize(), 10);
 
     // Create text object for FPS display
@@ -68,14 +68,14 @@ int main()
             circle->update(dt);
         }
 
-        // BackGroundDisplay::calculateDensityAndColorBackground(window, circles);
+        background_display.calculateDensityAndColorBackground(circles);
 
         for (auto& circle : circles)
         {
             window.draw(*circle);
         }
 
-        background_display.calculateDensityAndDrawVectors(circles);
+        // background_display.calculateDensityAndDrawVectors(circles);
 
         if (happened.type == sf::Event::MouseButtonPressed)
         {

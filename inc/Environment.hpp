@@ -13,11 +13,10 @@ class EnvironmentProperties
         : configReader_(configReader)
     {
         auto config_gravity = configReader->getGravity();
-        auto influenceRange = configReader->getInfluenceRange();
+        influenceRange = configReader->getInfluenceRange();
 
         gravity = {config_gravity.first, config_gravity.second};
         damping = 0.9;
-        influenceRange = influenceRange;
 
         if (!m_font.loadFromFile(configReader->getFontPath()))
         {

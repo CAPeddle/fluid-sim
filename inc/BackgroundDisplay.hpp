@@ -42,7 +42,7 @@ class BackGroundDisplay
         }
         std::cout << "Display Grid Size: " << m_display_gridSize << std::endl;
 
-        const int influenceRange = static_cast<int>(2 * configReader_->getInfluenceRange());
+        const int influenceRange = static_cast<int>(configReader_->getInfluenceRange());
 
         try
         {
@@ -72,7 +72,7 @@ class BackGroundDisplay
         }
     }
 
-    void calculateDensityAndColorBackground(sf::RenderWindow& window, const std::vector<MovingCircle>& circles);
+    void calculateDensityAndColorBackground(const std::vector<std::shared_ptr<MovingCircle>>& circles);
     void calculateDensityAndDrawVectors(const std::vector<std::shared_ptr<MovingCircle>>& circles);
 
    private:
